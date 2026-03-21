@@ -21,9 +21,10 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             LocationSeeder::class,
             StoreSeeder::class,
-            StaffSeeder::class,
+            // StaffSeeder::class,
             StockLotSeeder::class,  // ← 追加
             StockLotLocationSeeder::class,
+            UserSeeder::class, // ← 再追加
         ]);
 
         User::factory()->create([
