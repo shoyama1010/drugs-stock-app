@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('name');
 
-            $table->string('pin_hash');
+            $table->string('pin');
 
             $table->boolean('is_active')->default(true);
 

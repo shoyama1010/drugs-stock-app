@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Staff;
 
 class AuthController extends Controller
 {
     // 🔐 管理者ログイン
+
     public function adminLogin(Request $request)
     {
         $request->validate([
@@ -21,7 +23,10 @@ class AuthController extends Controller
             ->where('role', 'admin')
             ->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+
+        if (!$user || !Hash::check($request->password, $user->password))
+             {
+
             return response()->json(['message' => 'ログイン失敗'], 401);
         }
         $token = $user->createToken('admin-token')->plainTextToken;
@@ -32,6 +37,7 @@ class AuthController extends Controller
         ]);
     }
 
+    
     // 🔐 スタッフログイン
     public function staffLogin(Request $request)
     {
@@ -40,19 +46,20 @@ class AuthController extends Controller
             'pin' => 'required',
         ]);
 
-        $user = User::where('employee_code', $request->employee_code)
-            ->where('role', 'staff')
+        $staff = Staff::where('employee_code', $request->employee_code)
+            ->where('is_active', true)
             ->first();
-        if (!$user || !Hash::check($request->pin, $user->pin)) {
-        // if (!$user || $request->pin !== $user->pin) {
+
+        if (!$staff || !Hash::check($request->pin, $staff->pin)) {
             return response()->json(['message' => '認証失敗'], 401);
         }
 
-        $token = $user->createToken('staff-token')->plainTextToken;
+        $token = $staff->createToken('staff-token')->plainTextToken;
+
         return response()->json([
             'token' => $token,
             'role' => 'staff',
-            'user' => $user,
+            'user' => $staff,
         ]);
     }
 

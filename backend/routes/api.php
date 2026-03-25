@@ -22,7 +22,7 @@ Route::get('/test', function () {
 */
 // admin
 // Route::post('/admin/login', [AdminAuthController::class, 'login']);
-Route::post('/login', [AuthController::class, 'adminLogin']);
+Route::post('/admin/login', [AuthController::class, 'adminLogin']);
 // staff
 Route::post('/staff/login', [AuthController::class, 'staffLogin']); // 追加
 // ログアウト（認証必要）

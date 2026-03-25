@@ -18,11 +18,12 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             // 管理者
             [
-                'name' => 'Admin',
-                'email' => 'admin@test.com',
+                'name' => 'Test',
+                'email' => 'test@test.com',
+                // 'name' => 'Admin',
+                // 'email' => 'admin@test.com',
                 'password' => Hash::make('password'),
-                'employee_code' => null,
-                'pin' => null,
+                // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9kH6r5H2R2r1fK7w9eW6nK',
                 'role' => 'admin',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -32,8 +33,9 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Staff1',
                 'email' => 'staff1@test.com', // 必須
-                'password' => Hash::make('dummy'), // 必須（使わない）
-                'employee_code' => '1001',
+                // 'password' => 'staff', // 必須
+
+                // 'employee_code' => '1001',
                 'pin' => Hash::make('1234'), // ←重要
                 'role' => 'staff',
                 'created_at' => now(),
