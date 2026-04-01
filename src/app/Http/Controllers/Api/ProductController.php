@@ -29,7 +29,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|unique:products,code',
+            'sku' => 'required|string|unique:products,sku',
+            'category_id' => 'required|exists:categories,id',
+            'unit_price' => 'required|integer|min:0',
+            'min_stock' => 'required|integer|min:0',
+        ]);
+
+        $product = Product::create([
+            'name' => $request->name,
+            'code' => $request->code,
+            'sku' => $request->sku,
+            'category_id' => $request->category_id,
+            'unit_price' => $request->unit_price,
+            'min_stock' => $request->min_stock,
+            'is_active' => true,
+        ]);
+
+        return response()->json($product, 201);
     }
 
     /**

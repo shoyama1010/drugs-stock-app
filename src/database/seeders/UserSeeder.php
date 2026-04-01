@@ -20,11 +20,11 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Test',
                 'email' => 'test@test.com',
-                // 'name' => 'Admin',
-                // 'email' => 'admin@test.com',
                 'password' => Hash::make('password'),
-                // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9kH6r5H2R2r1fK7w9eW6nK',
+                'employee_code' => null,
+                'pin_hash' => null,
                 'role' => 'admin',
+                'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -32,12 +32,12 @@ class UserSeeder extends Seeder
             // スタッフ
             [
                 'name' => 'Staff1',
-                'email' => 'staff1@test.com', // 必須
-                // 'password' => 'staff', // 必須
-
-                // 'employee_code' => '1001',
+                'email' => null,
+                'password' => null,
+                'employee_code' => '1001',
                 'pin_hash' => Hash::make('1234'), // ←重要
                 'role' => 'staff',
+                'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

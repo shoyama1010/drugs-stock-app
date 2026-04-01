@@ -18,17 +18,21 @@ use App\Http\Controllers\Api\StockController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// 認証ルート
+Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/admin/login', [AuthController::class, 'adminLogin']);
+Route::post('/staff/login', [AuthController::class, 'staffLogin']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
 });
 
 Route::apiResource('products', ProductController::class);
-
-// 認証ルート
-Route::post('admin/login', [AuthController::class, 'adminLogin']);
-Route::post('staff/login', [AuthController::class, 'staffLogin']);
-Route::post('logout', [AuthController::class, 'logout']);
-
 // 在庫ルート
 Route::get('stocks', [StockController::class, 'index']);
 

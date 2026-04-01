@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('stock_lot_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('staff_id')->constrained('staffs')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->enum('type', ['in', 'out']);
             $table->integer('quantity');
             $table->foreignId('store_id')->nullable()->constrained()->nullOnDelete();

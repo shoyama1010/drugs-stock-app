@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('staff_id')->constrained('staffs')->cascadeOnDelete();
+            // $table->foreignId('staff_id')->constrained('staffs')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('status');
             $table->timestamp('shipped_at')->nullable();
             $table->timestamps();
