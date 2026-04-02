@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('stock_lots', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('location_id')->constrained()->cascadeOnDelete();
+            // $table->foreignId('location_id')->constrained()->cascadeOnDelete();
             $table->string('lot_number')->unique();
-            $table->integer('quantity_initial');
-            $table->integer('quantity_remaining');
+            $table->integer('quantity_total');
+            // $table->integer('quantity_initial');
+            // $table->integer('quantity_remaining');
             $table->date('received_at');
             $table->date('expiry_date')->nullable();
             $table->timestamps();

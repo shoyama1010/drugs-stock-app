@@ -72,7 +72,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update($request->all());
+
+        return response()->json([
+            'message' => '更新成功',
+            'data' => $product
+        ]);
     }
 
     /**
@@ -80,6 +85,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        \Log::info("削除実行", ['id' => $product->id]);
+
+        $product->delete();
+
+        return response()->json([
+            'message' => '削除成功'
+        ]);
     }
 }

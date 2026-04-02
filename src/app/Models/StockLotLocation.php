@@ -8,6 +8,12 @@ use App\Models\Location;
 
 class StockLotLocation extends Model
 {
+    protected $fillable = [
+        'stock_lot_id',
+        'location_id',
+        'quantity_initial',
+        'quantity_remaining',
+    ];
 
     public function stockLot()
     {

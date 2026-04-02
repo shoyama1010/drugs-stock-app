@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             LocationSeeder::class,
-            StockLotSeeder::class,
-            StockLotLocationSeeder::class,
+            // StockLotSeeder::class,
+            // StockLotLocationSeeder::class,
         ]);
     }
 }
