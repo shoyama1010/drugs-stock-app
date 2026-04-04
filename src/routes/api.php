@@ -34,5 +34,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::apiResource('products', ProductController::class);
 // 在庫ルート
-// Route::get('stocks', [StockController::class, 'index']);
+Route::get('stocks', [StockController::class, 'index']);
 Route::post('/stocks/in', [StockController::class, 'store']);
