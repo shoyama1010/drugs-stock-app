@@ -1,3 +1,39 @@
+# DrugStore向け在庫管理システム
+
+# 作成した目的
+
+倉庫作業での商品の入出庫作業において、より深くロケーションへのピッキング作業への思いやりがあり、
+より実務向けのアプリを作成してみようと考えてみました。将来的にピッキング作業者での入出庫をより改善させ、
+配送先のリアルタイムなシステムへ改善してみようと思ってます。
+
+# アプリケーションURL
+
+ローカル環境：http://localhost:5173/
+
+# 機能一覧
+
+・ログイン機能
+
+・CRUD機能（商品登録、更新、編集、削除）
+
+・入庫機能
+
+・出庫機能
+
+・# 使用技術
+
+・Laravel 8
+
+・nginx 1.21.1
+
+・php 8.0
+
+・mysql 8.0.26
+
+・fortfy（laravel認証）
+
+・Api/Sanctum　
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
