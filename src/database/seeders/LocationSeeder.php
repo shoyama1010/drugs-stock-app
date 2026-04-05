@@ -13,44 +13,31 @@ class LocationSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('locations')->insert([
-            [
-                'zone' => 'A',
-                'aisle' => 'A',
-                'shelf' => '12',
-                'position' => '1',
-                'capacity' => 500,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'zone' => 'B',
-                'aisle' => 'A',
-                'shelf' => '01',
-                'position' => '02',
-                'capacity' => 500,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'zone' => 'C',
-                'aisle' => 'B',
-                'shelf' => '02',
-                'position' => '01',
-                'capacity' => 400,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'zone' => 'D',
-                'aisle' => 'C',
-                'shelf' => '03',
-                'position' => '01',
-                'capacity' => 300,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        $zones = range('A', 'D');     // とりあえず A〜D
+        $aisles = range(1, 4);        // 通路 1〜4
+        $shelves = range(1, 5);       // 棚 1〜5
 
-        ]);
+        $locations = [];
+
+        foreach ($zones as $zone) {
+            foreach ($aisles as $aisle) {
+                foreach ($shelves as $shelf) {
+
+                    $locations[] = [
+                        'zone' => $zone,
+                        'aisle' => (string)$aisle,
+                        'shelf' => str_pad($shelf, 2, '0', STR_PAD_LEFT),
+                        'position' => '01', // 今は固定
+                        'capacity' => 500,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+
+        DB::table('locations')->insert($locations);
+
+        
     }
 }
