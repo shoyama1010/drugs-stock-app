@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\StockLotLocation;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Models\Transaction;
 
 class StockController extends Controller
 {
@@ -176,6 +177,18 @@ class StockController extends Controller
                     'quantity_initial' => $allocation['quantity'],
                     'quantity_remaining' => $allocation['quantity'],
                 ]);
+
+                // 各棚に割り当てた分ごとに履歴記録
+                Transaction::create([
+                    'product_id' => $request->product_id,
+                    'stock_lot_id' => $lot->id,
+                    // 'user_id' => auth()->id(),
+                    'user_id' => 1, // 仮でadminユーザーIDを指定
+                    'type' => 'in',
+                    'quantity' => $allocation['quantity'],
+                    'location_id' => $allocation['location_id'],
+                    'note' => '入庫',
+                ]);
             }
 
             // ⑧ 結果返却
@@ -250,22 +263,6 @@ class StockController extends Controller
                 ], 422);
             }
 
-            // この商品の現在庫合計を確認
-            // $totalStock = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
-            //     ->where('stock_lots.product_id', $request->product_id)
-            //     ->where('stock_lot_locations.location_id', $request->location_id) // 在庫一覧から棚を選ぶ
-            //     ->sum('stock_lot_locations.quantity_remaining');
-
-            // if ($totalStock < $request->quantity) {
-            //     return response()->json([
-            //         // 'message' => '在庫数が不足しています。',
-            //         // 'total_stock' => $totalStock,
-            //         'message' => '指定した棚の在庫数が不足しています。',
-            //         'location_stock' => $locationStock, // 在庫一覧から棚を選ぶ
-            //         'requested_quantity' => (int) $request->quantity,
-            //     ], 422);
-            // }
-
             // 指定棚にある,FIFOで古いロット順に取得
             $lotLocations = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
                 ->where('stock_lots.product_id', $request->product_id)
@@ -298,6 +295,17 @@ class StockController extends Controller
                 StockLotLocation::where('id', $lotLocation->id)->update([
                     'quantity_remaining' => $available - $deductQty,
                     'updated_at' => now(),
+                ]);
+
+                Transaction::create([
+                    'product_id' => $request->product_id,
+                    'stock_lot_id' => $lotLocation->stock_lot_id,
+                    // 'user_id' => auth()->id() ?? 1,
+                    'user_id' => 1, // 仮でadminユーザーIDを指定
+                    'type' => 'out',
+                    'quantity' => $deductQty,
+                    'location_id' => $lotLocation->location_id,
+                    'note' => $request->reason,
                 ]);
 
                 $deductions[] = [

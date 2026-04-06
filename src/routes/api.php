@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StockController;
+use App\Http\Controllers\Api\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,5 @@ Route::apiResource('products', ProductController::class);
 Route::get('stocks', [StockController::class, 'index']);
 Route::post('/stocks/in', [StockController::class, 'store']);
 Route::post('/stocks/out', [StockController::class, 'stockOut']);
+
+Route::get('/transactions', [TransactionController::class, 'index']);

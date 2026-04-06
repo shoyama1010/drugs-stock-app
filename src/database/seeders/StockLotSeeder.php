@@ -18,7 +18,6 @@ class StockLotSeeder extends Seeder
                 'product_id' => 1,
                 'location_id' => 1, // ← 追加
                 'lot_number' => 'LOT001',
-                // 'quantity_total' => 120,
                 'received_at' => now(),
                 'quantity_initial' => 120, // ←入庫時数量
                 'quantity_remaining' => 120, // ←現在の在庫数量
