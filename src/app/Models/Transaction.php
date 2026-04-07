@@ -19,3 +19,4 @@ class Transaction extends Model
         'note',
     ];
 }
+

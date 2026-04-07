@@ -10,6 +10,8 @@ use App\Models\StockLotLocation;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Http\Requests\StockInRequest;
+use App\Http\Requests\StockOutRequest;
 
 class StockController extends Controller
 {
@@ -48,31 +50,16 @@ class StockController extends Controller
     }
 
     // 🟢 入庫
-    public function store(Request $request)
+    public function store(StockInRequest $request)
     {
-        $request->validate([
-            'product_id' => ['required', 'integer', 'exists:products,id'],
-            'lot_number' => ['required', 'string', 'max:255'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'shelf' => ['required', 'string', 'max:255'],
-            'expiry_date' => ['nullable', 'date'],
-        ], [
-            'product_id.required' => '商品を選択してください。',
-            'product_id.exists' => '選択した商品が存在しません。',
-            'lot_number.required' => 'ロット番号を入力してください。',
-            'quantity.required' => '数量を入力してください。',
-            'quantity.integer' => '数量は整数で入力してください。',
-            'quantity.min' => '数量は1以上で入力してください。',
-            'shelf.required' => '棚番号を入力してください。',
-            'expiry_date.date' => '期限日は正しい日付形式で入力してください。',
-        ]);
+        $validated = $request->validated();
 
-        return DB::transaction(function () use ($request) {
-            $requestedQuantity = (int) $request->quantity;
+        return DB::transaction(function () use ($validated) {
+            $requestedQuantity = (int) $validated['quantity'];
             $remainingQuantity = $requestedQuantity;
 
             // ① 棚番号を分解する
-            $formattedShelf = strtoupper(trim($request->shelf));
+            $formattedShelf = strtoupper(trim($validated['shelf']));
             $parts = explode('-', $formattedShelf);
 
             if (count($parts) !== 3) {
@@ -162,11 +149,11 @@ class StockController extends Controller
 
             // ⑥ ロット作成
             $lot = StockLot::create([
-                'product_id' => $request->product_id,
-                'lot_number' => $request->lot_number,
+                'product_id' => $validated['product_id'],
+                'lot_number' => $validated['lot_number'],
                 'quantity_total' => $requestedQuantity,
                 'received_at' => now(),
-                'expiry_date' => $request->expiry_date,
+                'expiry_date' => $validated['expiry_date'] ?? null,
             ]);
 
             // ⑦ 在庫ロケーション作成
@@ -178,12 +165,11 @@ class StockController extends Controller
                     'quantity_remaining' => $allocation['quantity'],
                 ]);
 
-                // 各棚に割り当てた分ごとに履歴記録
                 Transaction::create([
-                    'product_id' => $request->product_id,
+                    'product_id' => $validated['product_id'],
                     'stock_lot_id' => $lot->id,
                     // 'user_id' => auth()->id(),
-                    'user_id' => 1, // 仮でadminユーザーIDを指定
+                    'user_id' => 1,
                     'type' => 'in',
                     'quantity' => $allocation['quantity'],
                     'location_id' => $allocation['location_id'],
@@ -212,144 +198,214 @@ class StockController extends Controller
         });
     }
 
-
     // 🟢 出庫機能
-    public function stockOut(Request $request)
+    public function stockOut(StockOutRequest $request)
     {
-        $request->validate([
-            'product_id' => ['required', 'integer', 'exists:products,id'],
-            'location_id' => ['required', 'integer', 'exists:locations,id'], // 在庫一覧から棚を選ぶ
-            'quantity' => ['required', 'integer', 'min:1'],
-            'reason' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'product_id.required' => '商品を選択してください。',
-            'product_id.exists' => '選択した商品が存在しません。',
-            'location_id.required' => '棚を選択してください。', // 在庫一覧から棚を選ぶ
-            'quantity.required' => '出庫数を入力してください。',
-            'quantity.integer' => '出庫数は整数で入力してください。',
-            'quantity.min' => '出庫数は1以上で入力してください。',
-            'reason.string' => '出庫理由は文字列で入力してください。',
-            'reason.max' => '出庫理由は1000文字以内で入力してください。',
-        ]);
+        $validated = $request->validated();
 
-        return DB::transaction(function () use ($request) {
-            $product = Product::find($request->product_id);
+        $productId  = $validated['product_id'];
+        $locationId = $validated['location_id'];
+        $quantity   = (int) $validated['quantity'];
+        $reason     = $validated['reason'];
 
-            if (!$product) {
+        return DB::transaction(function () use ($productId, $locationId, $quantity, $reason) {
+            $slotLocations = StockLotLocation::with('stockLot')
+                ->where('location_id', $locationId)
+                ->where('quantity_remaining', '>', 0)
+                ->whereHas('stockLot', function ($query) use ($productId) {
+                    $query->where('product_id', $productId);
+                })
+                ->join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
+                ->orderBy('stock_lots.received_at', 'asc')
+                ->select('stock_lot_locations.*')
+                ->get();
+
+            if ($slotLocations->isEmpty()) {
                 return response()->json([
-                    'message' => '商品が存在しません。'
-                ], 404);
-            }
-
-            $location = Location::find($request->location_id);
-
-            if (!$location) {
-                return response()->json([
-                    'message' => '棚が存在しません。'
-                ], 404);
-            }
-
-            // 指定棚にある、この商品の在庫合計
-            $locationStock = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
-                ->where('stock_lots.product_id', $request->product_id)
-                ->where('stock_lot_locations.location_id', $request->location_id)
-                ->sum('stock_lot_locations.quantity_remaining');
-
-            if ($locationStock < $request->quantity) {
-                return response()->json([
-                    'message' => '指定した棚の在庫数が不足しています。',
-                    'location_stock' => $locationStock,
-                    'requested_quantity' => (int) $request->quantity,
+                    'message' => '指定した棚に対象商品の在庫がありません。'
                 ], 422);
             }
 
-            // 指定棚にある,FIFOで古いロット順に取得
-            $lotLocations = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
-                ->where('stock_lots.product_id', $request->product_id)
-                ->where('stock_lot_locations.location_id', $request->location_id) // 在庫一覧から棚を選ぶ
-                ->where('stock_lot_locations.quantity_remaining', '>', 0)
-                ->orderBy('stock_lots.received_at', 'asc')
-                ->orderBy('stock_lots.id', 'asc')
-                ->select(
-                    'stock_lot_locations.id',
-                    'stock_lot_locations.stock_lot_id',
-                    'stock_lot_locations.location_id',
-                    'stock_lot_locations.quantity_remaining',
-                    'stock_lots.received_at',
-                    'stock_lots.lot_number'
-                )
-                ->lockForUpdate()
-                ->get();
+            $totalStock = $slotLocations->sum('quantity_remaining');
 
-            $remainingToShip = (int) $request->quantity;
-            $deductions = [];
+            if ($totalStock < $quantity) {
+                return response()->json([
+                    'message' => '指定した棚の在庫数が不足しています。'
+                ], 422);
+            }
 
-            foreach ($lotLocations as $lotLocation) {
-                if ($remainingToShip <= 0) {
+            $remainingToRemove = $quantity;
+
+            foreach ($slotLocations as $slotLocation) {
+                if ($remainingToRemove <= 0) {
                     break;
                 }
 
-                $available = (int) $lotLocation->quantity_remaining;
-                $deductQty = min($available, $remainingToShip);
+                $available = (int) $slotLocation->quantity_remaining;
+                $removeQty = min($remainingToRemove, $available);
 
-                StockLotLocation::where('id', $lotLocation->id)->update([
-                    'quantity_remaining' => $available - $deductQty,
-                    'updated_at' => now(),
+                $slotLocation->update([
+                    'quantity_remaining' => $available - $removeQty,
                 ]);
 
                 Transaction::create([
-                    'product_id' => $request->product_id,
-                    'stock_lot_id' => $lotLocation->stock_lot_id,
-                    // 'user_id' => auth()->id() ?? 1,
-                    'user_id' => 1, // 仮でadminユーザーIDを指定
-                    'type' => 'out',
-                    'quantity' => $deductQty,
-                    'location_id' => $lotLocation->location_id,
-                    'note' => $request->reason,
+                    'product_id'  => $productId,
+                    'stock_lot_id' => $slotLocation->stock_lot_id,
+                    // 'user_id' => auth()->id(),
+                    'user_id'     => 1,
+                    'type'        => 'out',
+                    'quantity'    => $removeQty,
+                    'location_id' => $locationId,
+                    'note'        => $reason,
                 ]);
 
-                $deductions[] = [
-                    'stock_lot_location_id' => $lotLocation->id,
-                    'stock_lot_id' => $lotLocation->stock_lot_id,
-                    'lot_number' => $lotLocation->lot_number,
-                    'location_id' => $lotLocation->location_id,
-                    'deducted_quantity' => $deductQty,
-                ];
-
-                $remainingToShip -= $deductQty;
-            }
-
-            // 出庫後の残在庫
-            $afterStock = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
-                ->where('stock_lots.product_id', $request->product_id)
-                ->where('stock_lot_locations.location_id', $request->location_id) // 在庫一覧から棚を選ぶ
-                ->sum('stock_lot_locations.quantity_remaining');
-
-            $alertMessage = null;
-            $status = '十分';
-
-            $minStock = (int) ($product->min_stock ?? 0);
-
-            if ($afterStock === 0) {
-                $status = '在庫切れ';
-                $alertMessage = '在庫がありません。補充が必要です。';
-            } elseif ($minStock > 0 && $afterStock <= $minStock) {
-                $status = '少量';
-                $alertMessage = '在庫が少なくなっています。倉庫から補充してください。';
+                $remainingToRemove -= $removeQty;
             }
 
             return response()->json([
-                'message' => '出庫が完了しました。',
-                'product_id' => $product->id,
-                'product_name' => $product->name,
-                'location_id' => $location->id, // 在庫一覧から棚を選ぶ
-                'location_code' => $location->zone . '-' . $location->aisle . '-' . $location->shelf, // 在庫一覧から棚を選ぶ
-                'shipped_quantity' => (int) $request->quantity,
-                'remaining_stock' => $afterStock,
-                'status' => $status,
-                'alert_message' => $alertMessage,
-                'deductions' => $deductions,
+                'message' => '出庫完了',
             ], 200);
         });
     }
+
+    // 🟢 出庫機能
+    // public function stockOut(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => ['required', 'integer', 'exists:products,id'],
+    //         'location_id' => ['required', 'integer', 'exists:locations,id'], // 在庫一覧から棚を選ぶ
+    //         'quantity' => ['required', 'integer', 'min:1'],
+    //         'reason' => ['nullable', 'string', 'max:1000'],
+    //     ], [
+    //         'product_id.required' => '商品を選択してください。',
+    //         'product_id.exists' => '選択した商品が存在しません。',
+    //         'location_id.required' => '棚を選択してください。', // 在庫一覧から棚を選ぶ
+    //         'quantity.required' => '出庫数を入力してください。',
+    //         'quantity.integer' => '出庫数は整数で入力してください。',
+    //         'quantity.min' => '出庫数は1以上で入力してください。',
+    //         'reason.string' => '出庫理由は文字列で入力してください。',
+    //         'reason.max' => '出庫理由は1000文字以内で入力してください。',
+    //     ]);
+
+    //     return DB::transaction(function () use ($request) {
+    //         $product = Product::find($request->product_id);
+
+    //         if (!$product) {
+    //             return response()->json([
+    //                 'message' => '商品が存在しません。'
+    //             ], 404);
+    //         }
+
+    //         $location = Location::find($request->location_id);
+
+    //         if (!$location) {
+    //             return response()->json([
+    //                 'message' => '棚が存在しません。'
+    //             ], 404);
+    //         }
+
+    //         // 指定棚にある、この商品の在庫合計
+    //         $locationStock = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
+    //             ->where('stock_lots.product_id', $request->product_id)
+    //             ->where('stock_lot_locations.location_id', $request->location_id)
+    //             ->sum('stock_lot_locations.quantity_remaining');
+
+    //         if ($locationStock < $request->quantity) {
+    //             return response()->json([
+    //                 'message' => '指定した棚の在庫数が不足しています。',
+    //                 'location_stock' => $locationStock,
+    //                 'requested_quantity' => (int) $request->quantity,
+    //             ], 422);
+    //         }
+
+    //         // 指定棚にある,FIFOで古いロット順に取得
+    //         $lotLocations = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
+    //             ->where('stock_lots.product_id', $request->product_id)
+    //             ->where('stock_lot_locations.location_id', $request->location_id) // 在庫一覧から棚を選ぶ
+    //             ->where('stock_lot_locations.quantity_remaining', '>', 0)
+    //             ->orderBy('stock_lots.received_at', 'asc')
+    //             ->orderBy('stock_lots.id', 'asc')
+    //             ->select(
+    //                 'stock_lot_locations.id',
+    //                 'stock_lot_locations.stock_lot_id',
+    //                 'stock_lot_locations.location_id',
+    //                 'stock_lot_locations.quantity_remaining',
+    //                 'stock_lots.received_at',
+    //                 'stock_lots.lot_number'
+    //             )
+    //             ->lockForUpdate()
+    //             ->get();
+
+    //         $remainingToShip = (int) $request->quantity;
+    //         $deductions = [];
+
+    //         foreach ($lotLocations as $lotLocation) {
+    //             if ($remainingToShip <= 0) {
+    //                 break;
+    //             }
+
+    //             $available = (int) $lotLocation->quantity_remaining;
+    //             $deductQty = min($available, $remainingToShip);
+
+    //             StockLotLocation::where('id', $lotLocation->id)->update([
+    //                 'quantity_remaining' => $available - $deductQty,
+    //                 'updated_at' => now(),
+    //             ]);
+
+    //             Transaction::create([
+    //                 'product_id' => $request->product_id,
+    //                 'stock_lot_id' => $lotLocation->stock_lot_id,
+    //                 // 'user_id' => auth()->id() ?? 1,
+    //                 'user_id' => 1, // 仮でadminユーザーIDを指定
+    //                 'type' => 'out',
+    //                 'quantity' => $deductQty,
+    //                 'location_id' => $lotLocation->location_id,
+    //                 'note' => $request->reason,
+    //             ]);
+
+    //             $deductions[] = [
+    //                 'stock_lot_location_id' => $lotLocation->id,
+    //                 'stock_lot_id' => $lotLocation->stock_lot_id,
+    //                 'lot_number' => $lotLocation->lot_number,
+    //                 'location_id' => $lotLocation->location_id,
+    //                 'deducted_quantity' => $deductQty,
+    //             ];
+
+    //             $remainingToShip -= $deductQty;
+    //         }
+
+    //         // 出庫後の残在庫
+    //         $afterStock = StockLotLocation::join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
+    //             ->where('stock_lots.product_id', $request->product_id)
+    //             ->where('stock_lot_locations.location_id', $request->location_id) // 在庫一覧から棚を選ぶ
+    //             ->sum('stock_lot_locations.quantity_remaining');
+
+    //         $alertMessage = null;
+    //         $status = '十分';
+
+    //         $minStock = (int) ($product->min_stock ?? 0);
+
+    //         if ($afterStock === 0) {
+    //             $status = '在庫切れ';
+    //             $alertMessage = '在庫がありません。補充が必要です。';
+    //         } elseif ($minStock > 0 && $afterStock <= $minStock) {
+    //             $status = '少量';
+    //             $alertMessage = '在庫が少なくなっています。倉庫から補充してください。';
+    //         }
+
+    //         return response()->json([
+    //             'message' => '出庫が完了しました。',
+    //             'product_id' => $product->id,
+    //             'product_name' => $product->name,
+    //             'location_id' => $location->id, // 在庫一覧から棚を選ぶ
+    //             'location_code' => $location->zone . '-' . $location->aisle . '-' . $location->shelf, // 在庫一覧から棚を選ぶ
+    //             'shipped_quantity' => (int) $request->quantity,
+    //             'remaining_stock' => $afterStock,
+    //             'status' => $status,
+    //             'alert_message' => $alertMessage,
+    //             'deductions' => $deductions,
+    //         ], 200);
+    //     });
+    // }
+
 }
