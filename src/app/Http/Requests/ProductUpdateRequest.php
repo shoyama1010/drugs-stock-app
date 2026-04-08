@@ -21,11 +21,13 @@ class ProductUpdateRequest extends FormRequest
             'code' => [
                 'required',
                 'string',
+                'max:255',
                 Rule::unique('products', 'code')->ignore($productId),
             ],
             'sku' => [
                 'required',
                 'string',
+                'max:255',
                 Rule::unique('products', 'sku')->ignore($productId),
             ],
             'category_id' => ['required', 'exists:categories,id'],
@@ -43,12 +45,15 @@ class ProductUpdateRequest extends FormRequest
 
             'code.required'        => '商品コードを入力してください。',
             'code.unique'          => 'この商品コードは既に使用されています。',
+            'code.max'             => '商品コードは255文字以内で入力してください。',
 
             'sku.required'         => 'SKUを入力してください。',
             'sku.unique'           => 'このSKUは既に使用されています。',
+            'sku.max'              => 'SKUは255文字以内で入力してください。',
 
             'category_id.required' => 'カテゴリを選択してください。',
             'category_id.exists'   => '選択したカテゴリが存在しません。',
+            'category_id.integer'  => 'カテゴリIDの形式が不正です。',
 
             'unit_price.required'  => '単価を入力してください。',
             'unit_price.integer'   => '単価は整数で入力してください。',

@@ -15,8 +15,8 @@ class ProductStoreRequest extends FormRequest
     {
         return [
             'name'        => ['required', 'string', 'max:255'],
-            'code'        => ['required', 'string', 'unique:products,code'],
-            'sku'         => ['required', 'string', 'unique:products,sku'],
+            'code'        => ['required', 'string', 'max:255', 'unique:products,code'],
+            'sku'         => ['required', 'string', 'max:255', 'unique:products,sku'],
             'category_id' => ['required', 'exists:categories,id'],
             'unit_price'  => ['required', 'integer', 'min:0'],
             'min_stock'   => ['required', 'integer', 'min:0'],
@@ -29,12 +29,16 @@ class ProductStoreRequest extends FormRequest
             'name.required'        => '商品名を入力してください。',
             'name.max'             => '商品名は255文字以内で入力してください。',
 
+
             'code.required'        => '商品コードを入力してください。',
+            'code.max'             => '商品コードは255文字以内で入力してください。',
             'code.unique'          => 'この商品コードは既に使用されています。',
 
             'sku.required'         => 'SKUを入力してください。',
+            'sku.max'              => 'SKUは255文字以内で入力してください。',
             'sku.unique'           => 'このSKUは既に使用されています。',
 
+            'category_id.integer'  => 'カテゴリIDの形式が不正です。',
             'category_id.required' => 'カテゴリを選択してください。',
             'category_id.exists'   => '選択したカテゴリが存在しません。',
 

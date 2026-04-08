@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
+// 「本人確認して入る」役割
 class AuthController extends Controller
 {
     /**
