@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Http\Requests\StaffChangePinRequest;
 
 // 「本人確認して入る」役割
 class AuthController extends Controller
@@ -69,6 +70,8 @@ class AuthController extends Controller
                 'token' => $token,
                 'role' => 'staff',
                 'user' => $user,
+
+                'requires_pin_change' => !$user->is_pin_changed,
             ]);
         }
 
@@ -98,5 +101,32 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'ログアウトしました'
         ]);
+    }
+
+    /**
+     * 🔄 スタッフPIN変更
+     */
+    public function changePin(StaffChangePinRequest $request)
+    {
+        $user = $request->user();
+        if (!$user || $user->role !== 'staff') {
+            return response()->json([
+                'message' => 'スタッフのみ利用できます。'
+            ], 403);
+        }
+
+        if (!Hash::check($request->current_pin, $user->pin_hash)) {
+            return response()->json([
+                'message' => '現在のPINが正しくありません。'
+            ], 422);
+        }
+        $user->update([
+            'pin_hash' => Hash::make($request->new_pin),
+            'is_pin_changed' => true,
+        ]);
+
+        return response()->json([
+            'message' => 'PINを変更しました。'
+        ], 200);
     }
 }

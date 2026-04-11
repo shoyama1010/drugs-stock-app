@@ -14,23 +14,22 @@ class StaffStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'  => '氏名を入力してください。',
-            'name.string'    => '氏名の形式が不正です。',
-            'name.max'       => '氏名は255文字以内で入力してください。',
+            'name.required' => '氏名を入力してください。',
+            'name.string' => '氏名の形式が不正です。',
+            'name.max' => '氏名は255文字以内で入力してください。',
 
             'email.required' => 'メールアドレスを入力してください。',
-            'email.string'   => 'メールアドレスの形式が不正です。',
-            'email.email'    => '正しいメールアドレス形式で入力してください。',
-            'email.max'      => 'メールアドレスは255文字以内で入力してください。',
-            'email.unique'   => 'このメールアドレスは既に登録されています。',
+            'email.email' => '正しいメールアドレス形式で入力してください。',
+            'email.max' => 'メールアドレスは255文字以内で入力してください。',
+            'email.unique' => 'このメールアドレスは既に登録されています。',
         ];
     }
 }
