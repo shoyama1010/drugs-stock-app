@@ -168,8 +168,8 @@ class StockController extends Controller
                 Transaction::create([
                     'product_id' => $validated['product_id'],
                     'stock_lot_id' => $lot->id,
-                    // 'user_id' => auth()->id(),
-                    'user_id' => 1,
+                    'user_id' => auth()->id(),
+                    // 'user_id' => 1,
                     'type' => 'in',
                     'quantity' => $allocation['quantity'],
                     'location_id' => $allocation['location_id'],
@@ -251,8 +251,8 @@ class StockController extends Controller
                 Transaction::create([
                     'product_id'  => $productId,
                     'stock_lot_id' => $slotLocation->stock_lot_id,
-                    // 'user_id' => auth()->id(),
-                    'user_id'     => 1,
+                    'user_id' => auth()->id(),
+                    // 'user_id'     => 1,
                     'type'        => 'out',
                     'quantity'    => $removeQty,
                     'location_id' => $locationId,
