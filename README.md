@@ -1,4 +1,5 @@
-## DrugStore向け在庫管理SPA
+# DrugStore向け在庫管理SPA
+<img width="1359" height="581" alt="Image" src="https://github.com/user-attachments/assets/fc276b83-de1f-43b7-840d-808d7d385d0c" />
 
 ## 概要
 
