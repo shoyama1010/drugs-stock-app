@@ -47,8 +47,9 @@
 
 - FIFO（先入れ先出し）出庫
 - SKUの分離（1商品複数SKU対応）
-- 在庫アラート（最小在庫数）
-- トランザクション履歴の強化
+- レポート機能の開発
+- 在庫履歴の強化
+- 配送先機能の開発
 
 <img width="744" height="421" alt="Image" src="https://github.com/user-attachments/assets/794772e8-8616-4b78-aa88-7c2e3d1d4724" />
 <img width="893" height="584" alt="Image" src="https://github.com/user-attachments/assets/1310599b-97cc-4b26-9c15-a492d05550c2" />
