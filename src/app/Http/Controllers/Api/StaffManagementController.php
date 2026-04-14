@@ -57,6 +57,7 @@ class StaffManagementController extends Controller
 
         return DB::transaction(function () use ($validated) {
             $employeeCode = $this->generateEmployeeCode();
+
             $tempPin = $this->generateTemporaryPin();
 
             $staff = User::create([
