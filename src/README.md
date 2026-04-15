@@ -75,14 +75,22 @@
 - スタッフ管理API
 
 ## セットアップ手順
-```bash
-- git clone <backend-repository-url>
-- cd <backend-project-directory>
-- docker compose up -d --build
-- composer install
-- cp .env.example .env
-- php artisan key:generate
-- php artisan migrate --seed
+
+ git clone <backend-repository-url>
+
+ cd <backend-project-directory>
+
+ docker compose up -d --build
+
+ cd src
+
+ composer install
+
+ cp .env.example .env
+
+ php artisan key:generate
+
+ php artisan migrate --seed
 
 
 
