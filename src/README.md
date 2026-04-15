@@ -100,14 +100,14 @@
 本アプリでは主要機能について Feature Test を実装し、動作検証を行っています。
 
 ### 認証機能
-- 管理者ログイン（email + password）
-- スタッフログイン（employee_code + PIN）
+- 管理者ログイン（email + password）：AdminLoginTest
+- スタッフログイン（employee_code + PIN）：StaffLoginTest
 
 それぞれについて、認証成功時にトークンおよびユーザー情報が正しく返却されることを確認
 
 ### 在庫管理機能
-- 入庫処理（StockInTest）
-- 出庫処理（StockOutTest）
+- 入庫処理：（StockInTest）
+- 出庫処理：（StockOutTest）
 
 以下の内容を確認
 - 認証済ユーザーによる操作が可能であること
