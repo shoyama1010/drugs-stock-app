@@ -119,8 +119,9 @@
 - テスト用DB作成（.env.testing）
 - tests/Feature/配下に、各テスト用ファイル作成
 - テスト用mysqlのため、マイグレーションを実行
+
   
-php artisan test
+- 各ファイルごとに、php artisan test
 
 テストは `.env.testing` を用いて、本番DBと分離した環境で実行
 
