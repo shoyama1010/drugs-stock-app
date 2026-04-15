@@ -9,7 +9,9 @@
 
 - 在庫管理業務の効率化
 - admin / staff の役割を分けた運用
-- 初回ログイン時 PIN変更など、実務を意識した認証導線
+- 入出庫ミス（数量・棚）の削減
+- 在庫状況の可視化
+- 実務に近いアプリケーション開発スキルの習得
 
 ## アプリケーションURL
 
@@ -20,16 +22,16 @@
 - adminログイン
 - staffログイン
 - 初回ログイン時のPIN変更
-- 商品管理 CRUD
-- 入庫機能
-- 出庫機能
-- 在庫一覧表示
+- 商品管理 CRUD(商品登録 / 編集 / 更新 / 削除)、SKU / 最小在庫管理
+- 入庫機能（ロット番号単位で入庫、空き容量チェック、複数ロケーションへの分割配置対応）
+- 出庫機能（FIFOを意識したロット処理、トランザクション履歴記録）
+- 在庫一覧表示（ロケーション単位）＊将来アラート表示予定
 - 入出庫履歴表示
 - CSV出力
-- スタッフ管理
+- スタッフ管理（スタッフ登録、スタッフログイン） 
 - staff新規登録
 - 社員番号自動採番
-- 仮PIN自動生成
+- 仮PIN自動生成　＊仮PIN⇒本PINへの変更は、今後調整あり。
 - メール送信（MailHogで確認）
   
 ## 認証・権限設計
@@ -93,6 +95,34 @@
  php artisan migrate --seed
 
 
+## テスト
+
+本アプリでは主要機能について Feature Test を実装し、動作検証を行っています。
+
+### 認証機能
+- 管理者ログイン（email + password）
+- スタッフログイン（employee_code + PIN）
+
+それぞれについて、認証成功時にトークンおよびユーザー情報が正しく返却されることを確認
+
+### 在庫管理機能
+- 入庫処理（StockInTest）
+- 出庫処理（StockOutTest）
+
+以下の内容を確認
+- 認証済ユーザーによる操作が可能であること
+- 入出庫処理が正常に完了すること
+- transactions テーブルに履歴が記録されること
+
+### テスト実行方法
+
+- テスト用DB作成（.env.testing）
+- tests/Feature/配下に、各テスト用ファイル作成
+- テスト用mysqlのため、マイグレーションを実行
+  
+php artisan test
+
+テストは `.env.testing` を用いて、本番DBと分離した環境で実行
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
