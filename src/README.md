@@ -17,17 +17,35 @@
 
 ## 機能一覧
 
-・ログイン機能（admin/staff）
+- adminログイン
+- staffログイン
+- 初回ログイン時のPIN変更
+- 商品管理 CRUD
+- 入庫機能
+- 出庫機能
+- 在庫一覧表示
+- 入出庫履歴表示
+- CSV出力
+- スタッフ管理
+- staff新規登録
+- 社員番号自動採番
+- 仮PIN自動生成
+- メール送信（MailHogで確認）
+  
+## 認証・権限設計
+### admin
+- メールアドレス + パスワードでログイン
+- 商品管理、入庫、出庫、在庫確認、履歴確認、CSV出力、スタッフ管理を担当
 
-・CRUD機能（商品登録、更新、編集、削除）
+### staff
+- employee_code + PIN でログイン
+- 初回ログイン時は PIN変更が必須
+- PIN変更完了後に staff-dashboard へ遷移
 
-・入庫機能
-
-・出庫機能
-
-・入出庫履歴機能
-
-・CSVエクスポート機能
+### 補足
+- `is_pin_changed` カラムにより PIN変更済み状態を管理
+- `requires_pin_change` による遷移分岐を実装
+- staff側の入出庫操作画面・権限制御は今後の拡張予定
 
 ## 使用技術
 
@@ -42,6 +60,29 @@
 ・fortfy（laravel認証）
 
 ・Api/Sanctum　
+
+・MailHog
+
+## API概要
+主なAPIの例：
+- admin認証API
+- staff認証API
+- 商品管理API
+- 入庫API
+- 出庫API
+- 在庫一覧API
+- 入出庫履歴API
+- スタッフ管理API
+
+## セットアップ手順
+```bash
+- git clone <backend-repository-url>
+- cd <backend-project-directory>
+- docker compose up -d --build
+- composer install
+- cp .env.example .env
+- php artisan key:generate
+- php artisan migrate --seed
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
