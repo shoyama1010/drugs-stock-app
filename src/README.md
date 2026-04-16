@@ -81,21 +81,37 @@
 - 入出庫履歴API
 - スタッフ管理API
 
-## セットアップ手順
+## 環境構築手順
+### 1 Gitファイルをクローンする
+ git clone https://github.com/shoyama1010/drugs-stock-app.git
 
- git clone <backend-repository-url>
-
- cd <backend-project-directory>
+### 2 Dockerコンテナを作成する
+ cd drugs-stock-app
 
  docker compose up -d --build
+
+### 3 Laravelパッケージをインストールする
+
+ docker-compose exec php bash(でPHPコンテナにログインし)
 
  cd src
 
  composer install
 
+### 4 .envファイルを作成する
  cp .env.example .env
+ - DB_CONNECTION=mysql
+ - DB_HOST=mysql
+ - DB_PORT=3306
+ - DB_DATABASE=drugstore
+ - DB_USERNAME=laravel
+ - DB_PASSWORD=secret
 
  php artisan key:generate
+
+### 5 テーブルの作成及びダミーデーター作成
+
+ docker-compose exec php bash
 
  php artisan migrate --seed
 
