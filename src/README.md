@@ -42,7 +42,8 @@
 
 <img width="1191" height="279" alt="Image" src="https://github.com/user-attachments/assets/251e3e62-bb60-408f-92b3-163a2605eb7d" />
 
-<img width="2487" height="3724" alt="Image" src="https://github.com/user-attachments/assets/73b84e71-f805-44fb-9bba-3ee485a15e20" />
+
+<img width="2557" height="3754" alt="Image" src="https://github.com/user-attachments/assets/d360ce56-9939-4318-9dde-99c378cf6961" />
 
 ## 認証、権限
 
