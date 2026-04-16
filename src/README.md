@@ -34,7 +34,7 @@
 - 仮PIN自動生成　＊仮PIN⇒本PINへの変更は、今後調整あり。
 - メール送信（MailHogで確認）
   
-## 認証・権限設計
+## DB設計、ER図
 
 <img width="2487" height="3724" alt="Image" src="https://github.com/user-attachments/assets/73b84e71-f805-44fb-9bba-3ee485a15e20" />
 
