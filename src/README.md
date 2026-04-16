@@ -36,6 +36,12 @@
   
 ## DB設計、ER図
 
+<img width="1175" height="431" alt="Image" src="https://github.com/user-attachments/assets/be9e93b4-30ad-47ef-be55-45e333aaf515" />
+
+<img width="1163" height="469" alt="Image" src="https://github.com/user-attachments/assets/338ff17a-94de-4323-9c96-108207f2b404" />
+
+<img width="1191" height="279" alt="Image" src="https://github.com/user-attachments/assets/251e3e62-bb60-408f-92b3-163a2605eb7d" />
+
 <img width="2487" height="3724" alt="Image" src="https://github.com/user-attachments/assets/73b84e71-f805-44fb-9bba-3ee485a15e20" />
 
 ## 認証、権限
