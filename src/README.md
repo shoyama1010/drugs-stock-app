@@ -38,6 +38,8 @@
 
 <img width="2487" height="3724" alt="Image" src="https://github.com/user-attachments/assets/73b84e71-f805-44fb-9bba-3ee485a15e20" />
 
+## 認証、権限
+
 ### admin
 - メールアドレス + パスワードでログイン
 - 商品管理、入庫、出庫、在庫確認、履歴確認、CSV出力、スタッフ管理を担当
