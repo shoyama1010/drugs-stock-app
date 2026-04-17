@@ -101,12 +101,16 @@
 
  docker-compose exec php bash(PHPコンテナにログインし)
 
- cd src
+ cd src　（cd /var/www/srcのようにする）
 
- composer install
+### 4　Laravelの依存パッケージをインストール
 
-### 4 .envファイルを作成する
+　composer install
+
+### 5 .envファイルを作成する
  cp .env.example .env
+
+ .env のDB設定を以下のように確認する
  - DB_CONNECTION=mysql
  - DB_HOST=mysql
  - DB_PORT=3306
@@ -114,11 +118,11 @@
  - DB_USERNAME=laravel
  - DB_PASSWORD=secret
 
- php artisan key:generate
+## 6 アプリケーションキーを生成
 
-### 5 テーブルの作成及びダミーデーター作成
+ php artisan key:generate   
 
- docker-compose exec php bash
+### 7 テーブル及び初期データの作成
 
  php artisan migrate --seed
 
