@@ -77,6 +77,8 @@
 
 ・MailHog
 
+・formrequest（laravelバリデーション）
+
 ## API概要
 主なAPIの例：
 - admin認証API
