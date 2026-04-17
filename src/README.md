@@ -99,7 +99,7 @@
 
 ### 3 Laravelパッケージをインストールする
 
- docker-compose exec php bash(でPHPコンテナにログインし)
+ docker-compose exec php bash(PHPコンテナにログインし)
 
  cd src
 
