@@ -16,20 +16,22 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // バリデーション
-        $request->validate([
-            'email' => 'nullable|email',
-            'password' => 'nullable',
-            'employee_code' => 'nullable',
-            'pin' => 'nullable',
-        ]);
-
+        
         /**
          * ============================
          * 🟦 管理者ログイン
          * ============================
          */
-        if ($request->email && $request->password) {
+        // if ($request->email && $request->password) {
+        if ($request->filled('email') || $request->filled('password')) {
+            $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string'],
+            ], [
+                'email.required' => 'メールアドレスを入力してください。',
+                'email.email' => 'メールアドレスの形式が正しくありません。',
+                'password.required' => 'パスワードを入力してください。',
+            ]);
 
             $user = User::where('email', $request->email)
                 ->where('role', 'admin')

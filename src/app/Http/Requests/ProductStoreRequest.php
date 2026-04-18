@@ -29,7 +29,6 @@ class ProductStoreRequest extends FormRequest
             'name.required'        => '商品名を入力してください。',
             'name.max'             => '商品名は255文字以内で入力してください。',
 
-
             'code.required'        => '商品コードを入力してください。',
             'code.max'             => '商品コードは255文字以内で入力してください。',
             'code.unique'          => 'この商品コードは既に使用されています。',
