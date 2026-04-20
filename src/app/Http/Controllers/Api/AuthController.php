@@ -16,7 +16,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        
+
         /**
          * ============================
          * 🟦 管理者ログイン
@@ -31,6 +31,7 @@ class AuthController extends Controller
                 'email.required' => 'メールアドレスを入力してください。',
                 'email.email' => 'メールアドレスの形式が正しくありません。',
                 'password.required' => 'パスワードを入力してください。',
+                // 'password.min' => 'パスワードは7文字以上で入力してください。',
             ]);
 
             $user = User::where('email', $request->email)
