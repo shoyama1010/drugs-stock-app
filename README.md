@@ -37,6 +37,7 @@
 
 - フリーロケーションに対応するために、ロットと棚を中間テーブルで分離してます。
 - 詳しい技術項目は、右記のリンクにて、一覧として載せています。https://github.com/shoyama1010/drugs-stock-app/tree/main/src
+- フロントエンド(React)側のリポジトリ⇒　https://github.com/shoyama1010/drugstock-frontend
 
 ## 今後の拡張予定
 
