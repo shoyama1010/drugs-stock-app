@@ -124,12 +124,12 @@
 
  php artisan key:generate   
 
-### 7 テーブル及び初期データの作成
+## 7 テーブル及び初期データの作成
 
  php artisan migrate --seed
 
 
-## テスト
+## 8 テスト
 
 本アプリでは主要機能について Feature Test を実装し、動作検証を行っています。
 
