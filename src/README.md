@@ -2,7 +2,7 @@
 <img width="1226" height="664" alt="Image" src="https://github.com/user-attachments/assets/38cf838d-eab1-4b7e-b931-54b156646ed3" />
 
 ## アプリ概要
-- 医薬品卸倉庫を想定した在庫管理SPAのバックエンド
+- 医薬品卸倉庫を想定した在庫管理システムとして運用する。
 - 商品管理、入庫、出庫、在庫確認、履歴管理、スタッフ管理を行う
 
 ## 開発目的
