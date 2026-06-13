@@ -101,7 +101,7 @@
 
 ### 3 Laravelパッケージをインストールする
 
- docker-compose exec php bash(PHPコンテナにログインし)
+ docker compose exec php bash(PHPコンテナにログインし)
 
  cd src　（cd /var/www/srcのようにする）
 
@@ -128,6 +128,8 @@
 
  php artisan migrate --seed
 
+*最後に
+- php artisan optimize:clear
 
 ## 8 テスト
 
