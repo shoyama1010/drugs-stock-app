@@ -120,6 +120,8 @@
  - DB_USERNAME=laravel
  - DB_PASSWORD=secret
 
+※ docker-compose.yml の MySQL 設定と一致するようにしてください。
+
 ## 6 アプリケーションキーを生成
 
  php artisan key:generate   
