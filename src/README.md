@@ -112,8 +112,8 @@
 ### 5 .envファイルを作成する
  cp .env.example .env
 
- .env のDB設定を以下のように確認する
- - DB_CONNECTION=mysql
+ env のDB設定を以下のように確認する
+ - DB_CONNECTION=mysql 
  - DB_HOST=mysql
  - DB_PORT=3306
  - DB_DATABASE=drugstore
