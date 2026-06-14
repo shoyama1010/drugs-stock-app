@@ -136,16 +136,16 @@
 ### メール設定（MailHog）
 
 スタッフ登録時に仮PINをメール送信するため、MailHogを使用しています。  
-.env のメール設定は以下にしてください。
+env のメール設定は以下にしてください。
 
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=hello@example.com
-MAIL_FROM_NAME="${APP_NAME}"
+- MAIL_MAILER=smtp
+- MAIL_HOST=mailhog
+- MAIL_PORT=1025
+- MAIL_USERNAME=null
+- MAIL_PASSWORD=null
+- MAIL_ENCRYPTION=null
+- MAIL_FROM_ADDRESS=hello@example.com
+- MAIL_FROM_NAME="${APP_NAME}"
 
 ## 8 テスト
 
