@@ -136,9 +136,8 @@
 ### メール設定（MailHog）
 
 スタッフ登録時に仮PINをメール送信するため、MailHogを使用しています。  
-`.env` のメール設定は以下にしてください。
+.env のメール設定は以下にしてください。
 
-```env
 MAIL_MAILER=smtp
 MAIL_HOST=mailhog
 MAIL_PORT=1025
