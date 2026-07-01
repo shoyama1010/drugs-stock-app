@@ -65,19 +65,19 @@
 
 ・Laravel 10
 
-・nginx 1.21.1
+・Nginx 1.21.1
 
-・php 8.0
+・PHP 8.0
 
 ・mysql 8.0.26
 
-・fortfy（laravel認証）
+・Fortfy（laravel認証）
 
 ・Api/Sanctum　
 
 ・MailHog
 
-・formrequest（laravelバリデーション）
+・FormRequest（laravelバリデーション）
 
 ## API概要
 主なAPIの例：
