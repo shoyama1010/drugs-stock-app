@@ -60,7 +60,7 @@
 
 ## 使用技術
 
-・Laravel 10
+・Laravel 10.5
 
 ・Nginx 1.21.1
 
