@@ -70,7 +70,7 @@
 
 ・Fortfy（laravel認証）
 
-・Api/Sanctum　
+・Api(Token方式)/Sanctum　
 
 ・MailHog
 
