@@ -70,13 +70,13 @@ class StaffManagementController extends Controller
                 'is_pin_changed' => false,
             ]);
 
-            Mail::to($staff->email)->send(
-                new StaffAccountCreatedMail(
-                    $staff->name,
-                    $employeeCode,
-                    $tempPin
-                )
-            );
+            // Mail::to($staff->email)->send(
+            //     new StaffAccountCreatedMail(
+            //         $staff->name,
+            //         $employeeCode,
+            //         $tempPin
+            //     )
+            // );
 
             return response()->json([
                 'message' => 'スタッフを登録しました。',
