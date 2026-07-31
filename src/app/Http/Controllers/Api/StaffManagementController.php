@@ -54,10 +54,8 @@ class StaffManagementController extends Controller
     public function store(StaffStoreRequest $request)
     {
         $validated = $request->validated();
-
         return DB::transaction(function () use ($validated) {
             $employeeCode = $this->generateEmployeeCode();
-
             $tempPin = $this->generateTemporaryPin();
 
             $staff = User::create([
@@ -70,16 +68,22 @@ class StaffManagementController extends Controller
                 'is_pin_changed' => false,
             ]);
 
-            // Mail::to($staff->email)->send(
-            //     new StaffAccountCreatedMail(
-            //         $staff->name,
-            //         $employeeCode,
-            //         $tempPin
-            //     )
-            // );
-
+            // ローカル環境だけMailHogへ送信
+            if (app()->environment('local')) {
+                Mail::to($staff->email)->send(
+                    new StaffAccountCreatedMail(
+                        $staff->name,
+                        $employeeCode,
+                        $tempPin
+                    )
+                );
+            }
+          
             return response()->json([
-                'message' => 'スタッフを登録しました。',
+                // 'message' => 'スタッフを登録しました。',
+                'message' => app()->environment('local')
+                     ? 'スタッフを登録し、メールを送信しました。'
+                : 'スタッフを登録しました。本番環境ではメール通知を停止しています。',
                 'data' => [
                     'id' => $staff->id,
                     'name' => $staff->name,
