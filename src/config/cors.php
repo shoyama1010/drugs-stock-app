@@ -22,7 +22,7 @@ return [
     'allowed_origins' => [
         'http://localhost:5173',
         'https://drugsstock-frontend.vercel.app',
-        'https://drugstock-frontend-3znw3o0pk-shoyama1010s-projects.vercel.app/',
+        'https://drugstock-frontend-3znw3o0pk-shoyama1010s-projects.vercel.app',
     ],
 
     'allowed_origins_patterns' => [],
