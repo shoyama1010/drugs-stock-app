@@ -19,11 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:5173',
-        'https://drugsstock-frontend.vercel.app',
-        // 'https://drugstock-frontend-dh9jracrs-shoyama1010s-projects.vercel.app',
-    ],
+    // 'allowed_origins' => [
+    //     'http://localhost:5173',
+    //     'https://drugsstock-frontend.vercel.app',
+    //     // 'https://drugstock-frontend-dh9jracrs-shoyama1010s-projects.vercel.app',
+    // ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
@@ -33,6 +34,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
-
+    // 'supports_credentials' => true,
+    'supports_credentials' => false,
 ];
