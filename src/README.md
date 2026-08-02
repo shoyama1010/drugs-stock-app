@@ -167,6 +167,8 @@ env のメール設定は以下にしてください。
 
 本アプリでは主要機能について Feature Test を実装し、動作検証を行っています。
 
+### テスト対象
+
 ### 認証機能
 - 管理者ログイン（email + password）：AdminLoginTest
 - スタッフログイン（employee_code + PIN）：StaffLoginTest
