@@ -74,3 +74,9 @@
 
 <img width="744" height="421" alt="Image" src="https://github.com/user-attachments/assets/794772e8-8616-4b78-aa88-7c2e3d1d4724" />
 <img width="893" height="584" alt="Image" src="https://github.com/user-attachments/assets/1310599b-97cc-4b26-9c15-a492d05550c2" />
+
+## 補足
+
+本アプリはポートフォリオとして開発したものです。
+
+実際の医薬品卸倉庫で運用する場合は、セキュリティ、監査ログ、法令対応、在庫精度、権限管理、バックアップ、障害対応、バーコード連携などについて、追加の設計と検証が必要です。
