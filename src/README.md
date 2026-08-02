@@ -1,4 +1,4 @@
-# DrugStore向け在庫管理システム
+# DrugStore向け在庫管理アプリ
 <img width="1226" height="664" alt="Image" src="https://github.com/user-attachments/assets/38cf838d-eab1-4b7e-b931-54b156646ed3" />
 
 ## 機能一覧
