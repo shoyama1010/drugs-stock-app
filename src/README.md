@@ -69,27 +69,12 @@
 
 <img width="2557" height="3754" alt="Image" src="https://github.com/user-attachments/assets/d360ce56-9939-4318-9dde-99c378cf6961" />
 
-## 認証、権限
-
-### admin
-- メールアドレス + パスワードでログイン
-- 商品管理、入庫、出庫、在庫確認、履歴確認、CSV出力、スタッフ管理を担当
-
-### staff
-- employee_code + PIN でログイン
-- 初回ログイン時は PIN変更が必須
-- PIN変更完了後に staff-dashboard へ遷移
-
-### 補足
-- `is_pin_changed` カラムにより PIN変更済み状態を管理
-- `requires_pin_change` による遷移分岐を実装
-- staff側の入出庫操作画面・権限制御は今後の拡張予定
 
 ## 使用技術
 
-・Laravel 10.5
+### バックエンド
 
-・Nginx 1.21.1
+・Laravel 10.5
 
 ・PHP 8.2
 
@@ -103,16 +88,23 @@
 
 ・FormRequest（laravelバリデーション）
 
-## API概要
-主なAPIの例：
-- admin認証API
-- staff認証API
-- 商品管理API
-- 入庫API
-- 出庫API
-- 在庫一覧API
-- 入出庫履歴API
-- スタッフ管理API
+### インフラ・開発環境
+・Nginx 1.21.1
+
+・Docker
+
+・phpMyAdmin
+
+・Git / GitHub
+
+・Railway（Laravel API・MySQLの公開）
+
+## 認証方式
+
+- Laravel SanctumのBearerトークン認証を使用しています。
+- ログイン成功時に発行されたアクセストークンを、以後のAPIリクエストのAuthorizationヘッダーに付与します。
+
+Authorization: Bearer {token}
 
 ## 環境構築手順
 ### 1 Gitファイルをクローンする
