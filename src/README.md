@@ -102,9 +102,9 @@
 ## 認証方式
 
 - Laravel SanctumのBearerトークン認証を使用しています。
-- ログイン成功時に発行されたアクセストークンを、以後のAPIリクエストのAuthorizationヘッダーに付与します。
-
-- Authorization: Bearer {token}で使用してます。
+- ログイン成功時にアクセストークンを発行し、以後のAPIリクエストではAuthorizationヘッダーに付与します。
+- APIリクエスト時は `Authorization: Bearer {token}` の形式で認証します。
+- 管理者（admin）とスタッフ（staff）のロールに応じて、アクセス可能な画面・機能を制御しています。
 
 ## 環境構築手順
 ### 1 Gitファイルをクローンする
