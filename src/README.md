@@ -78,7 +78,7 @@
 
 ・PHP 8.2
 
-・mysql 8.0.26
+・MySQL 8.0.26
 
 ・Fortfy（laravel認証）
 
@@ -104,7 +104,7 @@
 - Laravel SanctumのBearerトークン認証を使用しています。
 - ログイン成功時に発行されたアクセストークンを、以後のAPIリクエストのAuthorizationヘッダーに付与します。
 
-Authorization: Bearer {token}
+- Authorization: Bearer {token}で使用してます。
 
 ## 環境構築手順
 ### 1 Gitファイルをクローンする
