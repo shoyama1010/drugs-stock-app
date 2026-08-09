@@ -117,6 +117,8 @@
 
 ### 3 Laravelパッケージをインストールする
 
+◆ /var/www で実行すると composer.json が存在しないため、Composerのインストールを実行できませんので、下記のとおりにお願いします。
+
  docker compose exec php bash(PHPコンテナにログインし)
 
  cd src　（cd /var/www/srcのようにする）
