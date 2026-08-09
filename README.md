@@ -54,10 +54,13 @@
 
 これにより、実務に近い「分割入庫・分散管理」を再現しています。
 
-### 技術構成・公開URL
-- 技術項目ついては、このリンクにて、載せています。https://github.com/shoyama1010/drugs-stock-app/tree/main/src
-- フロントエンド(React)側のリポジトリ⇒　https://github.com/shoyama1010/drugstock-frontend
-- 実際の画面(ローカルURL)は、フロント側で制御してます⇒　localhost:5173
+### 技術項目＆構成・公開URL
+技術項目ついては、このReadmeリンクにて載せています ⇒　https://github.com/shoyama1010/drugs-stock-app/tree/main/src
+
+フロントエンド(React)側のリポジトリ　⇒　https://github.com/shoyama1010/drugstock-frontend
+
+実際の画面(ローカルURL)は、フロント側で制御してます⇒　localhost:5173
+
 - 公開用バックエンドAPI（DB）：Railway
 - 公開用フロントエンド：Vercel
 
