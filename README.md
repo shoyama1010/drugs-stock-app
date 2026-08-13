@@ -72,7 +72,7 @@
 - SKUの分離（1商品複数SKU対応）
 - レポート機能の開発
 - スタッフログイン機能の改良(PINログインの改善)
-- 上記からのスタッフ側からの入出庫機能の改良
+- 上記からのスタッフ側からの入出庫機能の改良（具体的な開発予定順） ⇒ https://github.com/shoyama1010/drugs-stock-app/tree/main/src
 - 配送先機能の開発
 
 <img width="744" height="421" alt="Image" src="https://github.com/user-attachments/assets/794772e8-8616-4b78-aa88-7c2e3d1d4724" />
