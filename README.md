@@ -72,7 +72,7 @@
 - SKUの分離（1商品複数SKU対応）
 - レポート機能の開発
 - スタッフログイン機能の改良(PINログインの改善)
-- 在庫履歴の強化（在庫画面から直接、入出庫操作など）
+- 上記からのスタッフ側からの入出庫機能の改良
 - 配送先機能の開発
 
 <img width="744" height="421" alt="Image" src="https://github.com/user-attachments/assets/794772e8-8616-4b78-aa88-7c2e3d1d4724" />
