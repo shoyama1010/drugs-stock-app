@@ -197,6 +197,24 @@ env のメール設定は以下にしてください。
 
 テストは `.env.testing` を用いて、本番DBと分離した環境で実行
 
+## スタッフでの今後改善
+### １．PIN初期画面の改良
+
+### ２．スタッフでの入出庫改善
+
+- 開発順序
+①スタッフダッシュボードに「入庫」「出庫」ボタン追加
+
+②スタッフから既存の入庫・出庫画面へ遷移
+
+③transactions.user_id にログインスタッフIDが入ることを確認
+
+④管理者の履歴画面に「担当者名」を表示
+
+⑤スタッフ側に「自分の作業履歴」を追加
+
+⑥最後にAPI側のロール権限を整理
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
