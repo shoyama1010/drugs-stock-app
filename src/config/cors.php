@@ -15,10 +15,10 @@ return [
     |
     */
 
-    // 'paths' => ['api/*', 'sanctum/csrf-cookie'],
-    'paths' => [
-        'api/*',
-    ],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    // 'paths' => [
+    //     'api/*',
+    // ],
 
     'allowed_methods' => ['*'],
 
@@ -26,6 +26,8 @@ return [
         'http://localhost:5173',
         'https://drugsstock-frontend.vercel.app',
         'https://drugstock-frontend-dh9jracrs-shoyama1010s-projects.vercel.app',
+        'https://drugstock-frontend-9pp2.vercel.app',
+        
     ],
 
     'allowed_origins_patterns' => [],
@@ -36,6 +38,6 @@ return [
 
     'max_age' => 0,
 
-    // 'supports_credentials' => true,
-    'supports_credentials' => false,
+    'supports_credentials' => true,
+    // 'supports_credentials' => false,
 ];
