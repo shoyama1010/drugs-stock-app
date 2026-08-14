@@ -25,6 +25,9 @@ class User extends Authenticatable
         'employee_code',
         'role',
         'pin_hash',
+
+        'is_pin_changed', // 0対策
+        'is_active',
     ];
 
     /**
@@ -45,6 +48,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        // 'password' => 'hashed',
+        
+        'is_active' => 'boolean',
+        'is_pin_changed' => 'boolean',
     ];
 }

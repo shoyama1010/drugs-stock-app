@@ -57,7 +57,6 @@ class AuthController extends Controller
          * ============================
          */
         if ($request->employee_code && $request->pin) {
-
             $user = User::where('employee_code', $request->employee_code)
                 ->where('role', 'staff')
                 ->where('is_active', true)
@@ -68,16 +67,13 @@ class AuthController extends Controller
             }
 
             $token = $user->createToken('staff-token')->plainTextToken;
-
             return response()->json([
                 'token' => $token,
                 'role' => 'staff',
                 'user' => $user,
-
                 'requires_pin_change' => !$user->is_pin_changed,
             ]);
         }
-
         /**
          * ❌ 入力不足
          */
@@ -85,6 +81,34 @@ class AuthController extends Controller
             'message' => '入力が不正です'
         ], 400);
     }
+    /**
+     * 🔄 スタッフPIN変更
+     */
+    public function changePin(StaffChangePinRequest $request)
+    {
+        $user = $request->user();
+        if (!$user || $user->role !== 'staff') {
+            return response()->json([
+                'message' => 'スタッフのみ利用できます。'
+            ], 403);
+        }
+
+        if (!Hash::check($request->current_pin, $user->pin_hash)) {
+            return response()->json([
+                'message' => '現在のPINが正しくありません。'
+            ], 422);
+        }
+
+        $user->update([
+            'pin_hash' => Hash::make($request->new_pin),
+            'is_pin_changed' => true,
+        ]);
+
+        return response()->json([
+            'message' => 'PINを変更しました。'
+        ], 200);
+    }
+
 
     /**
      * 👤 ログインユーザー取得
@@ -106,30 +130,5 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * 🔄 スタッフPIN変更
-     */
-    public function changePin(StaffChangePinRequest $request)
-    {
-        $user = $request->user();
-        if (!$user || $user->role !== 'staff') {
-            return response()->json([
-                'message' => 'スタッフのみ利用できます。'
-            ], 403);
-        }
-
-        if (!Hash::check($request->current_pin, $user->pin_hash)) {
-            return response()->json([
-                'message' => '現在のPINが正しくありません。'
-            ], 422);
-        }
-        $user->update([
-            'pin_hash' => Hash::make($request->new_pin),
-            'is_pin_changed' => true,
-        ]);
-
-        return response()->json([
-            'message' => 'PINを変更しました。'
-        ], 200);
-    }
+    
 }
