@@ -224,9 +224,9 @@ PIN変更完了後は `is_pin_changed = 1` に更新し、2回目以降のログ
 
 PINは平文では保存せず、ハッシュ化した状態で `pin_hash` に保存しています。
 
-### 入庫・出庫処理と在庫数を連動させ、操作履歴をtransactionsテーブルに記録する構成を実装
+#### 入庫・出庫処理と在庫数を連動させ、操作履歴をtransactionsテーブルに記録する構成を実装
 
-### Laravel APIとReactを分離し、Sanctumを利用した認証付きSPAとして構成
+#### Laravel APIとReactを分離し、Sanctumを利用した認証付きSPAとして構成
 
 ## 苦労した点
 
