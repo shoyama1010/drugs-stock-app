@@ -257,6 +257,37 @@ PINは平文では保存せず、ハッシュ化した状態で `pin_hash` に�
 
 ⑥最後にAPI側のロール権限を整理
 
+### 配送機能の開発予定
+
+- 開発順序(テーブル設計調整あり)
+
+- 配送先店舗選択・・・storeテーブル
+- 商品選択
+- 数量入力
+- 出荷伝票発行・・・shipments / shipment_itemsの各テーブル
+- 出荷確定⇒在庫数量状況・・・transactions / stock_lot_locationsの各テーブル
+
+開発視点・・・将来的にネット受注（注文）ありの開発を目的としてますが、現状としては確実に「配送完了」の視点で開発します。
+
+shipments
+
+→ 出荷伝票の親データ
+
+→ 店舗、状態、出荷日
+
+shipment_items
+
+→ 出荷伝票の明細
+
+→ 商品、数量
+
+transactions
+→ 実際に在庫を動かした履歴
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
