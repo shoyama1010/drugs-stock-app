@@ -210,16 +210,20 @@ env のメール設定は以下にしてください。
 
 - 各ファイルごとに、php artisan test
 
-テストは `.env.testing` を用いて、本番DBと分離した環境で実行
+テストは .env.testing` を用いて、本番DBと分離した環境で実行
 
-```env
 APP_ENV=testing
 
 DB_CONNECTION=mysql
+
 DB_HOST=mysql
+
 DB_PORT=3306
+
 DB_DATABASE=drugstore_test
+
 DB_USERNAME=laravel
+
 DB_PASSWORD=secret
 
 ## 9 工夫した点
