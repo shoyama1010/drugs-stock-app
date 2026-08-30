@@ -14,11 +14,9 @@ class AdminLoginTest extends TestCase
         $this->seed();
 
         $response = $this->postJson('/api/login', [
-            'email' => 'test@test.com',
+            'email' => 'admin@example.com',
             'password' => 'password',
         ]);
-
-        $response->dump();
 
         $response->assertStatus(200);
     }

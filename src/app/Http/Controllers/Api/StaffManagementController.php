@@ -14,10 +14,25 @@ use Illuminate\Support\Facades\Mail;
 class StaffManagementController extends Controller
 {
     /**
+     * 管理者権限チェック
+     */
+    private function ensureAdmin(Request $request): void
+    // 自分で作った管理者権限確認用の共通メソッド
+    {
+        $user = $request->user();
+
+        if (!$user || $user->role !== 'admin') {
+            abort(403, '管理者のみ利用できます。');
+        }
+    }
+
+    /**
      * スタッフ一覧取得
      */
     public function index()
     {
+        $this->ensureAdmin(request());
+
         $staffs = User::where('role', 'staff')
             ->select([
                 'id',
@@ -53,7 +68,10 @@ class StaffManagementController extends Controller
      */
     public function store(StaffStoreRequest $request)
     {
+        $this->ensureAdmin($request);
+
         $validated = $request->validated();
+
         return DB::transaction(function () use ($validated) {
             $employeeCode = $this->generateEmployeeCode();
             $tempPin = $this->generateTemporaryPin();
@@ -102,8 +120,16 @@ class StaffManagementController extends Controller
     /**
      * スタッフ詳細取得
      */
-    public function show(User $staff)
+    public function show(Request $request,User $staff)
     {
+        $this->ensureAdmin($request);
+
+        if ($staff->role !== 'staff') {
+            return response()->json([
+                'message' => '対象のスタッフが存在しません。'
+            ], 404);
+        }
+
         if ($staff->role !== 'staff') {
             return response()->json([
                 'message' => '対象のスタッフが存在しません。'
@@ -128,6 +154,8 @@ class StaffManagementController extends Controller
      */
     public function update(Request $request, User $staff)
     {
+        $this->ensureAdmin($request);
+
         if ($staff->role !== 'staff') {
             return response()->json([
                 'message' => '対象のスタッフが存在しません。'

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class StockOutTest extends TestCase
@@ -13,9 +14,21 @@ class StockOutTest extends TestCase
     {
         $this->seed();
 
+        $productId = DB::table('products')
+            ->where('code', 'P0001')
+            ->value('id');
+
+        $locationId = DB::table('locations')
+            ->where('zone', 'A')
+            ->where('aisle', '1')
+            ->where('shelf', '01')
+            ->where('position', '01')
+            ->value('id');
+
         // adminログイン
         $login = $this->postJson('/api/login', [
-            'email' => 'test@test.com',
+            // 'email' => 'test@test.com',
+            'email' => 'admin@example.com',
             'password' => 'password',
         ]);
 
@@ -24,7 +37,8 @@ class StockOutTest extends TestCase
         // 先に入庫して在庫を作る
         $stockIn = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/stocks/in', [
-                'product_id' => 1,
+                // 'product_id' => 1,
+                'product_id' => $productId,
                 'quantity' => 10,
                 'lot_number' => 'LOT-OUT-001',
                 'shelf' => 'A-1-01',
@@ -34,13 +48,15 @@ class StockOutTest extends TestCase
         // 出庫
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/stocks/out', [
-                'product_id' => 1,
-                'location_id' => 1, // ←追加
+            // 'product_id' => 1,
+            // 'location_id' => 1, 
+            'product_id' => $productId,
+            'location_id' => $locationId,
                 'quantity' => 5,
                 'reason' => 'テスト出庫',
             ]);
 
-        // $response->dump();
+        
         $response->assertStatus(200)
             ->assertJson([
                 'message' => '出庫完了',
@@ -48,7 +64,8 @@ class StockOutTest extends TestCase
 
         // DB確認（これ重要）
         $this->assertDatabaseHas('transactions', [
-            'product_id' => 1,
+            // 'product_id' => 1,
+            'product_id' => $productId,
             'type' => 'out',
             'quantity' => 5,
         ]);
