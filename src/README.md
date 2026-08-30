@@ -226,11 +226,11 @@ DB_USERNAME=laravel
 
 DB_PASSWORD=secret
 
-テスト用DBへマイグレーションを実行
+#### テスト用DBへマイグレーションを実行
 
 php artisan migrate --env=testing
 
-全テストを実行
+#### 全テストを実行
 
 php artisan test --env=testing
 
