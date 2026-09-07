@@ -1,5 +1,5 @@
 # DrugStore向け在庫管理アプリ
-<img width="1359" height="581" alt="Image" src="https://github.com/user-attachments/assets/fc276b83-de1f-43b7-840d-808d7d385d0c" />
+<img width="1269" height="671" alt="スクリーンショット (6928)" src="https://github.com/user-attachments/assets/d3c62ca1-a5cd-4ce2-aca3-370367eeab82" />
 
 ## 概要
 
