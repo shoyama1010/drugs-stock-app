@@ -149,7 +149,7 @@
  php artisan migrate --seed
 
 *最後に
-- php artisan optimize:clear
+php artisan optimize:clear
 
 ## メール設定（MailHog）
 
