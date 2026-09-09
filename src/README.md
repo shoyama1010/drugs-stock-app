@@ -140,18 +140,18 @@
 
 ※ docker-compose.yml の MySQL 設定と一致するようにしてください。
 
-## 6 アプリケーションキーを生成
+### 6 アプリケーションキーを生成
 
  php artisan key:generate   
 
-## 7 テーブル及び初期データの作成
+### 7 テーブル及び初期データの作成
 
  php artisan migrate --seed
 
 *最後に
 - php artisan optimize:clear
 
-### メール設定（MailHog）
+## メール設定（MailHog）
 
 スタッフ登録時に仮PINをメール送信するため、MailHogを使用しています。  
 env のメール設定は以下にしてください。
@@ -165,7 +165,7 @@ env のメール設定は以下にしてください。
 - MAIL_FROM_ADDRESS=hello@example.com
 - MAIL_FROM_NAME="${APP_NAME}"
 
-## 8 テスト
+## テスト
 
 本アプリでは主要機能について Feature Test を実装し、認証・権限制御・入出庫処理・バリデーション・DB更新・履歴保存を検証しています。
 
@@ -238,7 +238,7 @@ php artisan test --env=testing
 
 Tests: 17 passed、Assertions: 38
 
-## 9 工夫した点
+## 工夫した点
 
 ### スタッフログイン・初回PIN変更機能
 
@@ -269,7 +269,7 @@ PINは平文では保存せず、ハッシュ化した状態で `pin_hash` に�
 
 Laravel APIとReactを分離し、Sanctumを利用した認証付きSPAとして構成しています。
 
-## 10 苦労した点
+## 苦労した点
 
 １．PIN初期画面の改良
 
@@ -284,7 +284,7 @@ Laravel APIとReactを分離し、Sanctumを利用した認証付きSPAとして
 ## 将来への改善
 ### スタッフでの入出庫改善
 
-- 開発順序
+### 開発順序
 
 ①スタッフダッシュボードに「入庫」「出庫」ボタン追加
 
