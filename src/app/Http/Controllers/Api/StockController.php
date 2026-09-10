@@ -208,7 +208,14 @@ class StockController extends Controller
         $quantity   = (int) $validated['quantity'];
         $reason     = $validated['reason'];
 
-        return DB::transaction(function () use ($productId, $locationId, $quantity, $reason) {
+        return DB::transaction(function () use (
+            $productId,
+            $locationId,
+            $quantity,
+            $reason
+        ) {
+
+            // 同時出庫による在庫不整合を防ぐため排他ロックを追加
             $slotLocations = StockLotLocation::with('stockLot')
                 ->where('location_id', $locationId)
                 ->where('quantity_remaining', '>', 0)
@@ -218,6 +225,7 @@ class StockController extends Controller
                 ->join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
                 ->orderBy('stock_lots.received_at', 'asc')
                 ->select('stock_lot_locations.*')
+                ->lockForUpdate()  // 同時出庫対応
                 ->get();
 
             if ($slotLocations->isEmpty()) {
@@ -243,11 +251,12 @@ class StockController extends Controller
 
                 $available = (int) $slotLocation->quantity_remaining;
                 $removeQty = min($remainingToRemove, $available);
-
+                // 更新
                 $slotLocation->update([
                     'quantity_remaining' => $available - $removeQty,
                 ]);
 
+                // Transaction登録
                 Transaction::create([
                     'product_id'  => $productId,
                     'stock_lot_id' => $slotLocation->stock_lot_id,
@@ -267,5 +276,4 @@ class StockController extends Controller
             ], 200);
         });
     }
-
 }
