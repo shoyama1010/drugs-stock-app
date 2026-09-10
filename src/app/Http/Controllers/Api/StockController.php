@@ -72,13 +72,28 @@ class StockController extends Controller
 
             // aisle と shelf を整形
             $aisle = (string) intval($aisle); // 01 → 1
-            $shelf = str_pad((string) intval($shelf), 2, '0', STR_PAD_LEFT); // 1 → 01
+            $shelf = str_pad(
+                (string) intval($shelf),
+                2,
+                '0',
+                STR_PAD_LEFT
+            ); // 1 → 01
 
-            // ② 指定棚を取得
-            $primaryLocation = Location::where('zone', $zone)
-                ->where('aisle', $aisle)
-                ->where('shelf', $shelf)
-                ->first();
+            // ② 棚を一定順序で取得し、同時入庫による競合を防ぐため排他ロック
+            $lockedLocations = Location::orderBy('id')
+                ->lockForUpdate() // 同時入庫対応
+                ->get();
+
+            // 指定棚をロック済み棚一覧から取得
+            $primaryLocation = $lockedLocations->first(function ($location) use (
+                $zone,
+                $aisle,
+                $shelf
+            ) {
+                return $location->zone === $zone
+                    && (string) $location->aisle === $aisle
+                    && (string) $location->shelf === $shelf;
+            });
 
             if (!$primaryLocation) {
                 return response()->json([
@@ -87,7 +102,10 @@ class StockController extends Controller
             }
 
             // ③ 指定棚が使用中か確認
-            $primaryUsed = StockLotLocation::where('location_id', $primaryLocation->id)
+            $primaryUsed = StockLotLocation::where(
+                'location_id',
+                $primaryLocation->id
+            )
                 ->where('quantity_remaining', '>', 0)
                 ->exists();
 
@@ -97,21 +115,26 @@ class StockController extends Controller
                 ], 422);
             }
 
+            // 現在使用中の棚IDを取得
+            $usedLocationIds = StockLotLocation::where(
+                'quantity_remaining',
+                '>',
+                0
+            )->pluck('location_id');
+
             // ④ 指定棚 + 他の空棚候補
-            $candidateLocations = collect([$primaryLocation]);
+            $otherEmptyLocations = $lockedLocations
+                ->where('id', '!=', $primaryLocation->id)
+                ->whereNotIn('id', $usedLocationIds)
+                ->sortBy([
+                    ['zone', 'asc'],
+                    ['aisle', 'asc'],
+                    ['shelf', 'asc'],
+                ])
+                ->values();
 
-            $otherEmptyLocations = Location::where('id', '!=', $primaryLocation->id)
-                ->whereNotIn('id', function ($query) {
-                    $query->select('location_id')
-                        ->from('stock_lot_locations')
-                        ->where('quantity_remaining', '>', 0);
-                })
-                ->orderBy('zone')
-                ->orderBy('aisle')
-                ->orderBy('shelf')
-                ->get();
-
-            $candidateLocations = $candidateLocations->concat($otherEmptyLocations);
+            $candidateLocations = collect([$primaryLocation])
+                ->concat($otherEmptyLocations);
 
             // ⑤ 入庫割当
             $allocations = [];
@@ -127,7 +150,10 @@ class StockController extends Controller
                     continue;
                 }
 
-                $putQuantity = min($remainingQuantity, $capacity);
+                $putQuantity = min(
+                    $remainingQuantity,
+                    $capacity
+                );
 
                 if ($putQuantity > 0) {
                     $allocations[] = [
@@ -169,7 +195,6 @@ class StockController extends Controller
                     'product_id' => $validated['product_id'],
                     'stock_lot_id' => $lot->id,
                     'user_id' => auth()->id(),
-                    // 'user_id' => 1,
                     'type' => 'in',
                     'quantity' => $allocation['quantity'],
                     'location_id' => $allocation['location_id'],
@@ -178,17 +203,27 @@ class StockController extends Controller
             }
 
             // ⑧ 結果返却
-            $allocationResults = collect($allocations)->map(function ($allocation) {
-                $location = Location::find($allocation['location_id']);
+            $allocationResults = collect($allocations)->map(
+                function ($allocation) {
+                    $location = Location::find(
+                        $allocation['location_id']
+                    );
 
-                return [
-                    'location_id' => $allocation['location_id'],
-                    'shelf' => $location
-                        ? ($location->zone . '-' . $location->aisle . '-' . $location->shelf)
-                        : null,
-                    'quantity' => $allocation['quantity'],
-                ];
-            });
+                    return [
+                        'location_id' => $allocation['location_id'],
+                        'shelf' => $location
+                            ? (
+                                $location->zone
+                                . '-'
+                                . $location->aisle
+                                . '-'
+                                . $location->shelf
+                            )
+                            : null,
+                        'quantity' => $allocation['quantity'],
+                    ];
+                }
+            );
 
             return response()->json([
                 'message' => '入庫完了',
@@ -197,6 +232,7 @@ class StockController extends Controller
             ], 200);
         });
     }
+    
 
     // 🟢 出庫機能
     public function stockOut(StockOutRequest $request)
