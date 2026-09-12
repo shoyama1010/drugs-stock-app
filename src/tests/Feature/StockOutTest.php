@@ -37,11 +37,11 @@ class StockOutTest extends TestCase
         // 先に入庫して在庫を作る
         $stockIn = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/api/stocks/in', [
-                // 'product_id' => 1,
                 'product_id' => $productId,
                 'quantity' => 10,
                 'lot_number' => 'LOT-OUT-001',
                 'shelf' => 'A-1-01',
+
                 'expiry_date' => now()->addYear()->format('Y-m-d'),
             ]);
 

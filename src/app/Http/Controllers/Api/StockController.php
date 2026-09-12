@@ -238,8 +238,8 @@ class StockController extends Controller
     public function stockOut(StockOutRequest $request)
     {
         $validated = $request->validated();
-
         $productId  = $validated['product_id'];
+
         $locationId = $validated['location_id'];
         $quantity   = (int) $validated['quantity'];
         $reason     = $validated['reason'];

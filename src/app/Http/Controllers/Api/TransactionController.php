@@ -14,6 +14,14 @@ class TransactionController extends Controller
             $transactions = Transaction::query()
                 ->join('products', 'transactions.product_id', '=', 'products.id')
                 ->leftJoin('locations', 'transactions.location_id', '=', 'locations.id')
+                // 作業者情報を取得
+                ->leftJoin(
+                    'users',
+                    'transactions.user_id',
+                    '=',
+                    'users.id'
+                )
+
                 ->select(
                     'transactions.id',
                     'transactions.type',
@@ -22,9 +30,13 @@ class TransactionController extends Controller
                     'transactions.created_at as transaction_date',
                     'products.name as product_name',
                     'products.sku',
+
                     'locations.zone as zone',
                     'locations.aisle as aisle',
-                    'locations.shelf as shelf'
+                    'locations.shelf as shelf',
+
+                    // 実際に操作したユーザー名
+                    'users.name as staff_name'
                 )
                 ->orderBy('transactions.created_at', 'desc')
                 ->get()
@@ -36,7 +48,10 @@ class TransactionController extends Controller
                         'sku' => $item->sku,
                         'type' => $item->type === 'in' ? '入庫' : '出庫',
                         'quantity' => $item->quantity,
-                        'staff' => 'admin',
+                        
+                        // 'staff' => 'admin',
+                        'staff' => $item->staff_name ?? '不明',
+
                         'reason' => $item->note,
                         'location' => $item->zone
                             ? "{$item->zone}-{$item->aisle}-{$item->shelf}"
