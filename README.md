@@ -55,17 +55,14 @@ REST APIを介してデータを連携しています。
 
 ## 関連リンク
 
-- バックエンドリポジトリ  
-  https://github.com/shoyama1010/drugs-stock-app
-
 - フロントエンドリポジトリ  
   https://github.com/shoyama1010/drugstock-frontend
 
-- 公開フロントエンド  
-  Vercel
+- 公開デモ（Vercel）  
+  https://drugstock-frontend-9pp2.vercel.app/
 
-- 公開バックエンドAPI / DB  
-  Railway
+- バックエンドAPI  
+  Railwayで公開
 
 ---
 
