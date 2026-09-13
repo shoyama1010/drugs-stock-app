@@ -362,6 +362,103 @@ Authorization: Bearer {token}
 
 ---
 
+## 環境構築手順
+
+### 1. リポジトリをクローン
+
+```bash
+git clone https://github.com/shoyama1010/drugs-stock-app.git
+cd drugs-stock-app
+```
+
+### 2. Dockerコンテナを起動
+
+```bash
+docker compose up -d --build
+```
+
+### 3. PHPコンテナへ入る
+
+```bash
+docker compose exec php bash
+```
+
+Laravel本体は `/var/www/src` にあります。
+
+```bash
+cd /var/www/src
+```
+
+### 4. Laravel依存パッケージをインストール
+
+```bash
+composer install
+```
+
+### 5. `.env` を作成
+
+```bash
+cp .env.example .env
+```
+
+DB設定例：
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=drugstore
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
+
+`docker-compose.yml` のMySQL設定と一致させてください。
+
+### 6. アプリケーションキーを生成
+
+```bash
+php artisan key:generate
+```
+
+### 7. テーブル・初期データを作成
+
+```bash
+php artisan migrate --seed
+```
+
+### 8. キャッシュをクリア
+
+```bash
+php artisan optimize:clear
+```
+
+---
+
+## メール設定（MailHog）
+
+ローカル環境では、スタッフ登録時の仮PIN通知確認にMailHogを使用します。
+
+`.env` の例：
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+MailHog：
+
+```text
+http://localhost:8025
+```
+
+---
+
 ## テスト
 
 本アプリではFeature Testを実装し、認証・権限制御・入出庫処理・バリデーション・DB更新・履歴保存を検証しています。
@@ -560,102 +657,6 @@ shipped
 
 などのステータス管理を想定しています。
 
----
-
-## 環境構築手順
-
-### 1. リポジトリをクローン
-
-```bash
-git clone https://github.com/shoyama1010/drugs-stock-app.git
-cd drugs-stock-app
-```
-
-### 2. Dockerコンテナを起動
-
-```bash
-docker compose up -d --build
-```
-
-### 3. PHPコンテナへ入る
-
-```bash
-docker compose exec php bash
-```
-
-Laravel本体は `/var/www/src` にあります。
-
-```bash
-cd /var/www/src
-```
-
-### 4. Laravel依存パッケージをインストール
-
-```bash
-composer install
-```
-
-### 5. `.env` を作成
-
-```bash
-cp .env.example .env
-```
-
-DB設定例：
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=drugstore
-DB_USERNAME=laravel
-DB_PASSWORD=secret
-```
-
-`docker-compose.yml` のMySQL設定と一致させてください。
-
-### 6. アプリケーションキーを生成
-
-```bash
-php artisan key:generate
-```
-
-### 7. テーブル・初期データを作成
-
-```bash
-php artisan migrate --seed
-```
-
-### 8. キャッシュをクリア
-
-```bash
-php artisan optimize:clear
-```
-
----
-
-## メール設定（MailHog）
-
-ローカル環境では、スタッフ登録時の仮PIN通知確認にMailHogを使用します。
-
-`.env` の例：
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=hello@example.com
-MAIL_FROM_NAME="${APP_NAME}"
-```
-
-MailHog：
-
-```text
-http://localhost:8025
-```
 
 ---
 
