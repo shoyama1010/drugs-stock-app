@@ -524,6 +524,27 @@ php artisan test --env=testing
 Tests: 17 passed
 Assertions: 38
 ```
+### CI（GitHub Actions）
+
+コード更新時のテスト漏れを防ぐため、GitHub ActionsによるCIを導入しています。
+
+`main` ブランチへの push、および Pull Request 作成時に、Laravelのテストを自動実行します。
+
+```text
+コード更新
+↓
+GitHubへ push / Pull Request
+↓
+GitHub Actions 起動
+↓
+MySQLテスト環境を構築
+↓
+Laravel Feature Test / Unit Test を自動実行
+↓
+テスト結果を確認
+```
+
+これにより、コード変更によって既存機能に不具合が発生していないかを自動で確認できる構成としています。
 
 ---
 
