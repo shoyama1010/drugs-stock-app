@@ -59,10 +59,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        \Log::info("削除実行", ['id' => $product->id]);
-        $product->delete();
+        $product->update(['is_active' => false]);
         return response()->json([
-            'message' => '削除成功'
+            'message' => '商品を無効化しました'
         ]);
     }
 

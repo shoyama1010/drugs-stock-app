@@ -260,6 +260,8 @@ class StockController extends Controller
                 })
                 ->join('stock_lots', 'stock_lot_locations.stock_lot_id', '=', 'stock_lots.id')
                 ->orderBy('stock_lots.received_at', 'asc')
+                ->orderBy('stock_lots.id', 'asc')
+                ->orderBy('stock_lot_locations.id', 'asc')
                 ->select('stock_lot_locations.*')
                 ->lockForUpdate()  // 同時出庫対応
                 ->get();
