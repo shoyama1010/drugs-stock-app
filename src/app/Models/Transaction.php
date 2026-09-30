@@ -16,6 +16,8 @@ class Transaction extends Model
         'quantity',
         'location_id',
         'store_id',
+        'shipment_id',
+        'shipment_item_id',
         'note',
     ];
 }
