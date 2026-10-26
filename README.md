@@ -306,7 +306,7 @@ VercelはGitHubと連携したReactアプリのデプロイを行いやすく、
 ### バックエンド
 
 - Laravel 10.5
-- PHP 8.2
+- PHP 8.2.35
 - MySQL 8.0.26
 - Laravel Sanctum
 - FormRequest
